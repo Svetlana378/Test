@@ -121,6 +121,7 @@ for(let i = 1; i <= 50; i++) {
  7.С помощью цикла for сформируйте строку '123456789' и запишите ее в переменную str.
  ***/
 
+ /*
 let MAXLENGHTSTR = 50;
 let str ="";
 let symbol = "*";
@@ -159,5 +160,53 @@ if (lenghtStr.toString() != "NaN") {
 else {
    alert("Ошибка!!! Длина строки должна быть числом");
 }
+*/
 
 
+
+/****
+8. Создайте переменную str и присвойте ей значение 'abcde'. Обращаясь к отдельным символам этой строки выведите на экран символ 'a', символ 'b', символ 'e'.
+****/
+
+// let str = "Привет друзья!";
+// let resultStr = "";
+// for(let i = 0; i < str.length; i++) {
+//     if(i == str.length - 1) {
+//         resultStr += str[i];
+//     }
+//     else {
+//         resultStr += str[i] + "\n";
+//     }
+// }
+// alert(resultStr);
+
+/*** 
+9. Дан массив с элементами 'Привет, ', 'мир' и '!'. Необходимо вывести на экран фразу 'Привет, мир!'.
+***/
+
+// Первый вариант
+
+// let mas = ["Привет, ", "мир", "!"];
+// alert(mas[0] + mas[1] + mas[mas.length - 1]);
+
+// Второй вариант
+
+// let mas = ["Привет, ", "мир", "!"];
+// let str = "";
+// for (let i = 0; i < mas.length; i++){
+//     str += mas[i]
+// }
+// alert(str);
+
+// Третий вариант
+
+let mas = ["Привет, ", "мир", "!"];
+let str = "";
+let lenghtStr = "0";
+
+for (let index in mas) {
+    str += mas[index];
+    lenghtStr++;
+}
+
+alert(str + `\nДлина массива: ${lenghtStr}`);
