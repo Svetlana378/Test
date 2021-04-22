@@ -200,13 +200,72 @@ else {
 
 // Третий вариант
 
-let mas = ["Привет, ", "мир", "!"];
-let str = "";
-let lenghtStr = "0";
+// let mas = ["Привет, ", "мир", "!"];
+// let str = "";
+// let lenghtStr = "0";
 
-for (let index in mas) {
-    str += mas[index];
-    lenghtStr++;
+// for (let index in mas) {
+//     str += mas[index];
+//     lenghtStr++;
+// }
+
+// alert(str + `\nДлина массива: ${lenghtStr}`);
+
+/** 
+10. Даны два массива: ['a', 'b', 'c'] и [1, 2, 3]. Объедините их вместе.
+***/
+
+// let massLet = ['a', 'b', 'c'];
+// let massNum = [1, 2, 3];
+
+// for (let i = 0; i < massNum.length; i++) {
+
+//     massLet[massLet.length] = massNum[i];
+
+// }
+// console.dir(massLet);
+
+let month = "";
+let numberDate;
+let dayWeek = "";
+
+let date = new Date();
+
+let arrayDays = {
+    0: "воскресенье",
+    1: "понедельник",
+    2: "вторник",
+    3: "среда",
+    4: "четверг",
+    5: "пятница",
+    6: "суббота"
 }
 
-alert(str + `\nДлина массива: ${lenghtStr}`);
+let arrayMonth = {
+    0: "январь",
+    1: "февраль",
+    2: "март",
+    3: "апрель",
+    4: "май",
+    5: "июнь",
+    6: "июль",
+    7: "август",
+    8: "сентябрь",
+    9: "октябрь",
+    10: "ноябрь",
+    11: "декабрь"
+}
+
+for (let index in arrayDays) {
+    if(date.getDay() == index) {
+        dayWeek = arrayDays[index];
+    }
+}
+
+for (let index in arrayMonth) {
+    if(date.getMonth() == index) {
+        month = arrayMonth[index];
+    }
+}
+
+console.log(`Сегодня - ${month}, ${date.getDate()}, (${dayWeek})`);
