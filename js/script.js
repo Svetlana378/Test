@@ -268,4 +268,5 @@ for (let index in arrayMonth) {
     }
 }
 
-console.log(`Сегодня - ${month}, ${date.getDate()}, (${dayWeek})`);
+console.log(`Сегодня - ${date.getFullYear()}, ${month}, ${date.getDate()}(${dayWeek}). 
+Время ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
