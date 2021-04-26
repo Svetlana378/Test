@@ -1,5 +1,7 @@
 // Решение уравнения
 
+let inputs = document.querySelectorAll("params");
+
 let inputParamA = document.getElementById("param_a");
 let inputParamB = document.getElementById("param_b");
 let inputParamC = document.getElementById("param_c");
@@ -13,9 +15,14 @@ let result;
 
 
 let btnCalc = document.getElementById("btn_calc");
+let btnReset = document.getElementById("btn_reset");
 
 inputParamA.addEventListener("input", () => {
     inputParamB.removeAttribute("disabled");
+
+    btnCalc.removeAttribute("disabled");
+    btnReset.removeAttribute("disabled");
+
     paramA = +inputParamA.value;
 })
 
@@ -25,16 +32,33 @@ inputParamB.addEventListener("input", () => {
 })
 
 inputParamC.addEventListener("input", () => {
-    btnCalc.removeAttribute("disabled");
     paramC = +inputParamC.value;
 })
 
+// Обработчик события "клик по кнопке Очистить"
+btnReset.addEventListener("click", () => {
+    for(let item of inputs) {
+        if(item.getAttribute("type") == "number"){
+            item.value = "";
+        }
+        if(item.getAttribute("id") == "param_a") {
+            continue;
+        }
+        else {
+            item.setAttribute("disabled", "disabled");
+        } 
+    }
+})
+
+// Обработчик события "клик по кнопке Произвести расчёт"
 btnCalc.addEventListener("click", () => {
     result = calcSolution(paramA, paramB, paramC);
+
+    printSolution();
     
-    let solution = document.createElement("p");
-    solution.innerHTML = result;
-    divButtons.append(solution);
+    // let solution = document.createElement("p");
+    // solution.innerHTML = result;
+    // divButtons.append(solution);
 })
 
 
@@ -89,6 +113,17 @@ function checkParametr(param) {
 function calcSolution(a, b, c){
     let D; // дискриминант
     let result; //строка с итогом
+
+    if(typeof b == "underfined") {
+        b = 0;
+    }
+    if(typeof c == "undefined") {
+        c = 0;
+    }
+
+
+
+
 
     if(a == 0){
         if(b == 0){
@@ -156,4 +191,6 @@ function getSolution(solution) {
     }
 }
 
+function printSolution() {
 
+}
