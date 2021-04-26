@@ -1,22 +1,22 @@
 // Решение уравнения
-
-let inputs = document.querySelectorAll("params");
+let inputs = document.querySelectorAll("params"); //коллекция полей (поля ввода и кнопки)
 
 let inputParamA = document.getElementById("param_a");
 let inputParamB = document.getElementById("param_b");
 let inputParamC = document.getElementById("param_c");
 
-let divButtons = document.querySelector(".buttons");
+let paramA; // значение коэф. a
+let paramB; // значение коэф. b
+let paramC; // значение коэф. c
 
-let paramA;
-let paramB;
-let paramC;
-let result;
+let btnCalc = document.getElementById("btn_calc"); // кнопка расчёта
+let btnReset = document.getElementById("btn_reset"); // кнопка очистки
 
+let result; // результат вычисления
+let solution; // объект (параграф) для вывода результата
+let removed;
 
-let btnCalc = document.getElementById("btn_calc");
-let btnReset = document.getElementById("btn_reset");
-
+// обработчик события "input" при вводе в поле коэф. а
 inputParamA.addEventListener("input", () => {
     inputParamB.removeAttribute("disabled");
 
@@ -26,16 +26,19 @@ inputParamA.addEventListener("input", () => {
     paramA = +inputParamA.value;
 })
 
+// обработчик события "input" при вводе в поле коэф. b
 inputParamB.addEventListener("input", () => {
     inputParamC.removeAttribute("disabled");
     paramB = +inputParamB.value;
 })
 
+// обработчик события "input" при вводе в поле коэф. c
 inputParamC.addEventListener("input", () => {
     paramC = +inputParamC.value;
 })
 
-// Обработчик события "клик по кнопке Очистить"
+
+// обработчик события "click" при клике по кнопке "Очистить"
 btnReset.addEventListener("click", () => {
     for(let item of inputs) {
         if(item.getAttribute("type") == "number"){
@@ -48,68 +51,18 @@ btnReset.addEventListener("click", () => {
             item.setAttribute("disabled", "disabled");
         } 
     }
+    removed = document.body.removeChild(solution);
 })
 
-// Обработчик события "клик по кнопке Произвести расчёт"
+
+// обработчик события "click" при клике по кнопке "Произвести расчёт"
 btnCalc.addEventListener("click", () => {
     result = calcSolution(paramA, paramB, paramC);
-
     printSolution();
     
-    // let solution = document.createElement("p");
-    // solution.innerHTML = result;
-    // divButtons.append(solution);
 })
 
-
-
-
-// let params = setParametrs();
-// let solution;
-
-// if(typeof params != "string"){
-//     solution = calcSolution(params[0], params[1], params[2]);
-//     getSolution(solution);
-// }
-// else{
-//     alert(params);
-// }
-
-function setParametrs() {
-    let a, b, c; //коэф. кв. уравнения
-
-    if(a = setParam("a")) {
-        if(b = setParam("b")) {
-           if(c = setParam("c"));
-           {
-                return [a, b, c];
-           }
-        }
-    }
-    return "Вы отменили ввод!"
-}
-
-function setParam(nameParam) {
-    let param; // коэффициент уравнения
-    let cancel; //флаг для проверки ввода параметра
-
-    do {
-        param = prompt(`Коэф. ${nameParam}:`);
-        cancel = checkParametr(param);
-    } while (cancel);
-
-    return param;
-}
-
-function checkParametr(param) {
-    if (typeof param == "object") {
-        return false;
-    }
-    else if (isNaN(param) || param == "") {
-        alert("Ошибка! Введена пустая строка или не число!");
-        return true;
-    }
-}
+// главная функция расчёта корней (вычисление)
 function calcSolution(a, b, c){
     let D; // дискриминант
     let result; //строка с итогом
@@ -120,10 +73,6 @@ function calcSolution(a, b, c){
     if(typeof c == "undefined") {
         c = 0;
     }
-
-
-
-
 
     if(a == 0){
         if(b == 0){
@@ -157,12 +106,14 @@ function calcSolution(a, b, c){
     return result;
 }
 
+// функция для расчёта дискриминанта
 function calcD(a, b, c) {
     return b ** 2 - 4 *a * c;
 }
 
+// функция для расчёта корней квадратного уравнения
 function calcRoots (D, a, b, c){
-    let x1, x2; //корни уравнения
+    let x1, x2; //корни квадратного уравнения
 
     if (D > 0) {
         x1 = (-b + Math.sqrt(D)) / (2 * a);
@@ -178,19 +129,109 @@ function calcRoots (D, a, b, c){
     }
 }
 
-function getSolution(solution) {
-    if(typeof solution == "string"){
-        alert(solution);
+// функция вывода результата вы страницу (в объект p)
+function printSolution() {
+    if (removed) {
+        solution = createElem("p", "");
+        document.body.append(solution);
+
+        removed = null;
     }
-    else if(typeof solution == "number") {
-        alert(`Уравнение имеет один корень: x = ${solution.toFixed(2)}`);
+    if(solution) {
+        solution.innerHTML = checkResult(result);
     }
     else {
-        alert("Уравнение квадратное. Имеет два корня:\n" + "x1 = " + solution[0].
-        toFixed(2) + "\nx2 = " + solution[1].toFixed(2));
+        solution = createElem("p", checkResult(result));
+        document.body.append(solution);
     }
 }
 
-function printSolution() {
+//функция создания элемента 
+function createElem(tag, content) {
+    let elem;
 
+    elem = document.createElement(tag);
+    elem.innerHTML = content;
+    return elem;
 }
+
+
+// функция проверки результата вычисления
+function checkResult(result) {
+    if(typeof result == "string"){
+        return result;
+    }
+    else if(typeof result == "number") {
+        return `Уравнение имеет один корень: x = ${result.toFixed(2)}`;
+    }
+    else {
+        return "Уравнение квадратное. Имеет два корня:\n" + "x1 = " + result[0].
+        toFixed(2) + "\nx2 = " + result[1].toFixed(2);
+    }
+}
+
+
+
+
+// let params = setParametrs();
+// let solution;
+
+// if(typeof params != "string"){
+//     solution = calcSolution(params[0], params[1], params[2]);
+//     getSolution(solution);
+// }
+// else{
+//     alert(params);
+// }
+
+// function setParametrs() {
+//     let a, b, c; //коэф. кв. уравнения
+
+//     if(a = setParam("a")) {
+//         if(b = setParam("b")) {
+//            if(c = setParam("c"));
+//            {
+//                 return [a, b, c];
+//            }
+//         }
+//     }
+//     return "Вы отменили ввод!"
+// }
+
+// function setParam(nameParam) {
+//     let param; // коэффициент уравнения
+//     let cancel; //флаг для проверки ввода параметра
+
+//     do {
+//         param = prompt(`Коэф. ${nameParam}:`);
+//         cancel = checkParametr(param);
+//     } while (cancel);
+
+//     return param;
+// }
+
+// function checkParametr(param) {
+//     if (typeof param == "object") {
+//         return false;
+//     }
+//     else if (isNaN(param) || param == "") {
+//         alert("Ошибка! Введена пустая строка или не число!");
+//         return true;
+//     }
+// }
+
+
+// function getSolution(solution) {
+//     if(typeof solution == "string") {
+//         alert(solution);
+//     }
+//     else if(typeof solution == "number") {
+//         alert(`Уравнение имеет один корень: x = ${solution.toFixed(2)}`);
+//     }
+//     else {
+//         alert("Уравнение квадратное. Имеет два корня:\n" + "x1 = " + solution[0].
+//         toFixed(2) + "\nx2 = " + solution[1].toFixed(2));
+//     }
+// }
+
+
