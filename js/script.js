@@ -41,7 +41,8 @@ inputPageBgColor.addEventListener("input", () => {
     document.body.style.backgroundColor = inputPageBgColor.value;
 
     for(let title of titles) {
-        title.style.color = "#ff0000";
+        title.style.color = document.body.style.backgroundColor;
+        title.style.filter = "invert(100%) hue-rotate(270deg)";
     }
 })
 
