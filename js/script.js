@@ -13,9 +13,12 @@ let rangeParamA = document.getElementById("range_a");
 let rangeParamB = document.getElementById("range_b");
 let rangeParamC = document.getElementById("range_c");
 
-
+let buttons = document.querySelectorAll(".btn");
 let btnCalc = document.getElementById("btn_calc"); // кнопка расчёта
 let btnReset = document.getElementById("btn_reset"); // кнопка очистки
+let btnPlay = document.getElementById("btn_play"); // кнопка музыки
+
+let player = document.getElementById("player");
 
 
 let result; // результат вычисления
@@ -24,53 +27,37 @@ let removed; // удаленный объект, содержащий строк
 
 // обработчик события "input" при вводе в поле коэф. а
 inputParamA.addEventListener("input", () => {
-    paramA = +inputParamA.value; // значение коэф. а
-    rangeParamA.value = paramA; // значение ползунка коэф. а
-
-    unBlocked(inputParamB, rangeParamB, btnCalc, btnReset);
+    paramA = setParam(inputParamA, rangeParamA);
+    unBlocked(inputParamB, rangeParamB, buttons);
 })
 
 // обработчик события "input" при вводе в поле коэф. b
 inputParamB.addEventListener("input", () => {
-    paramB = +inputParamB.value; // значение коэф. b
-    rangeParamB.value = paramB; // значение ползунка коэф. b
-
-    inputParamC.removeAttribute("disabled");
-    rangeParamC.removeAttribute("disabled");
+    paramB = setParam(inputParamB, rangeParamB);
+    unBlocked(inputParamC, rangeParamC);
 })
 
 // обработчик события "input" при вводе в поле коэф. c
 inputParamC.addEventListener("input", () => {
-    paramC = +inputParamC.value; // значение коэф. c
-    rangeParamC.value = paramC; // значение ползунка коэф. c
+    paramC = setParam(inputParamC, rangeParamC);
 })
 
 // обработчик события "change" при изменении ползунка коэф. а
 rangeParamA.addEventListener("change", () => {
-    paramA = rangeParamA.value; // значение коэф. a
-    inputParamA.value = paramA; // значение поля с коэф. a
-
-    unBlocked(inputParamB, rangeParamB, btnCalc, btnReset);
+    
+    paramA = setParam(rangeParamA, inputParamA);
+    unBlocked(inputParamB, rangeParamB, buttons);
 })
 
 // обработчик события "change" при изменении ползунка коэф. b
 rangeParamB.addEventListener("change", () => {
-    paramB = rangeParamB.value; // значение коэф. b
-    inputParamB.value = paramB; // значение поля с коэф. b
-
-    inputParamC.removeAttribute("disabled");
-    rangeParamC.removeAttribute("disabled");
-    
+    paramB = setParam(rangeParamB, inputParamB);
+    unBlocked(inputParamC, rangeParamC);  
 })
 
 // обработчик события "change" при изменении ползунка коэф. c
 rangeParamC.addEventListener("change", () => {
-    paramC = rangeParamC.value; // значение коэф. c
-    inputParamC.value = paramC; // значение поля с коэф. c
-
-    inputParamC.removeAttribute("disabled");
-    rangeParamC.removeAttribute("disabled");
-    
+    paramC = setParam(rangeParamC, inputParamC);
 })
 
 // обработчик события "click" при клике по кнопке "Очистить"
@@ -96,14 +83,35 @@ btnCalc.addEventListener("click", () => {
     
 })
 
+//обработчик события "click" при клике по кнопке "Включить музыку"
+btnPlay.addEventListener("click", () => {
+    player.classList.toggle("player-show");
+
+    player.setAttribute("autoplay", "");
+    player.removeAttribute("muted");
+})
+
+
 
 //функция разблокировки полей и кнопок 
-function unBlocked(input, range, btnCalc, btnReset) {
+function unBlocked(input, range, buttons) {
     input.removeAttribute("disabled");
     range.removeAttribute("disabled");
-    
-    btnCalc.removeAttribute("disabled");
-    btnReset.removeAttribute("disabled");
+    if(buttons) {
+        for (let btn of buttons) {
+            btn.removeAttribute("disabled");
+        }
+    }
+}
+
+
+// функция
+
+function setParam (input1, input2) {
+    let param = +input1.value; //значение коэф.
+    input2.value = param; //значение поля/ползунка с коэф.
+
+    return param;
 }
 
 
