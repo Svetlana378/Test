@@ -1,6 +1,8 @@
 // Решение уравнения
 let inputs = document.querySelectorAll("input"); //коллекция полей (поля ввода и кнопки)
 
+let inputPageBgColor = document.getElementById("page_bgcolor");
+
 let inputParamA = document.getElementById("param_a");
 let inputParamB = document.getElementById("param_b");
 let inputParamC = document.getElementById("param_c");
@@ -30,6 +32,11 @@ let playerAttributes = {
 
 let result; // результат вычисления
 let solution; // объект для вывода результата
+
+// обработчик события "change" при изменении цвета фона
+inputPageBgColor.addEventListener("input", () => {
+    document.body.style.backgroundColor = inputPageBgColor.value;
+})
 
 
 // обработчик события "input" при вводе в поле коэф. а
