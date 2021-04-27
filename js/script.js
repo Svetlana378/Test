@@ -85,10 +85,18 @@ btnCalc.addEventListener("click", () => {
 
 //обработчик события "click" при клике по кнопке "Включить музыку"
 btnPlay.addEventListener("click", () => {
-    player.classList.toggle("player-show");
+    let player = document.createElement("audio");
 
+    player.setAttribute("id", "player");
+    player.setAttribute("src", "media/sample.mp3");
+    player.setAttribute("controls", "");
+    player.setAttribute("muted", "");
     player.setAttribute("autoplay", "");
-    player.removeAttribute("muted");
+
+    player.classList.add("player", "player-show");
+
+    document.body.append(player);
+
 })
 
 
