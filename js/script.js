@@ -1,5 +1,5 @@
 // Решение уравнения
-let inputs = document.querySelectorAll("params"); //коллекция полей (поля ввода и кнопки)
+let inputs = document.querySelectorAll("input"); //коллекция полей (поля ввода и кнопки)
 
 let inputParamA = document.getElementById("param_a");
 let inputParamB = document.getElementById("param_b");
@@ -9,17 +9,24 @@ let paramA; // значение коэф. a
 let paramB; // значение коэф. b
 let paramC; // значение коэф. c
 
+let rangeParamA = document.getElementById("range_a");
+let rangeParamB = document.getElementById("range_b");
+let rangeParamC = document.getElementById("range_c");
+
+
 let btnCalc = document.getElementById("btn_calc"); // кнопка расчёта
 let btnReset = document.getElementById("btn_reset"); // кнопка очистки
+
 
 let result; // результат вычисления
 let solution; // объект для вывода результата
 let removed; // удаленный объект, содержащий строку результата
 
+
 // обработчик события "input" при вводе в поле коэф. а
 inputParamA.addEventListener("input", () => {
     inputParamB.removeAttribute("disabled");
-
+    
     btnCalc.removeAttribute("disabled");
     btnReset.removeAttribute("disabled");
 
@@ -38,13 +45,45 @@ inputParamC.addEventListener("input", () => {
 })
 
 
+
+// обработчик события "change" при изменении ползунка коэф. а
+rangeParamA.addEventListener("change", () => {
+    inputParamA.value = rangeParamA.value;
+
+    inputParamB.removeAttribute("disabled");
+    rangeParamB.removeAttribute("disabled");
+    
+    btnCalc.removeAttribute("disabled");
+    btnReset.removeAttribute("disabled");
+})
+
+// обработчик события "change" при изменении ползунка коэф. b
+rangeParamB.addEventListener("change", () => {
+    inputParamB.value = rangeParamB.value;
+
+    inputParamC.removeAttribute("disabled");
+    rangeParamC.removeAttribute("disabled");
+    
+})
+
+// обработчик события "change" при изменении ползунка коэф. c
+rangeParamC.addEventListener("change", () => {
+    inputParamC.value = rangeParamC.value;
+
+    inputParamC.removeAttribute("disabled");
+    rangeParamC.removeAttribute("disabled");
+    
+})
+
+
+
 // обработчик события "click" при клике по кнопке "Очистить"
 btnReset.addEventListener("click", () => {
     for(let item of inputs) {
-        if(item.getAttribute("type") == "number"){
+        if(item.getAttribute("type") == "number" || item.getAttribute("type") == "range"){
             item.value = "";
         }
-        if(item.getAttribute("id") == "param_a") {
+        if(item.getAttribute("id") == "param_a" || item.getAttribute("id") == "range_a") {
             continue;
         }
         else {

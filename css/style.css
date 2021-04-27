@@ -49,6 +49,13 @@ body {
     color:rgb(0, 187,19);
 }
 
+.form-equation .range {
+    margin-top: 15px;
+    margin-right: 20px;
+
+    width: 150px;
+}
+
 .form-equation .buttons {
     margin-top: 15px;
 }
