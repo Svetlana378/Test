@@ -1,67 +1,89 @@
-// Решение уравнения
+/****DOM-объекты (начало) ***/
+    let body = document.body // тело страницы
+    let titles = document.querySelectorAll(".title"); // заголовок и названия областей формы
 
-let titles = document.querySelectorAll(".title"); //заголовок и названия областей формы
+    /*ПОЛЯ ВВОДА (числа, переключатели, флажки) */
+    let inputs = document.querySelectorAll(".parametrs input"); // коллекция полей (поля ввода и кнопки)
 
-let inputs = document.querySelectorAll("input"); //коллекция полей (поля ввода и кнопки)
+    let inputPageBgColor = document.getElementById("page_bgcolor"); // поле с цветом фона
+    let inputPageImgLink = document.getElementById("page_imglink"); // поле с ссылкой на картинку
+    let bgSize = document.querySelectorAll("[name='bgSize']"); // переключатели масштабирования фона
 
-let inputPageBgColor = document.getElementById("page_bgcolor");
+    let inputParamA = document.getElementById("param_a"); // поле с коэф. a
+    let inputParamB = document.getElementById("param_b"); // поле с коэф. b
+    let inputParamC = document.getElementById("param_c"); // поле с коэф. c
 
-let inputParamA = document.getElementById("param_a");
-let inputParamB = document.getElementById("param_b");
-let inputParamC = document.getElementById("param_c");
+    /*ПОЛЗУНКИ */
+    let rangeParamA = document.getElementById("range_a"); // ползунок с коэф. а
+    let rangeParamB = document.getElementById("range_b"); // ползунок с коэф. b
+    let rangeParamC = document.getElementById("range_c"); // ползунок с коэф. c
 
-let paramA; // значение коэф. a
-let paramB; // значение коэф. b
-let paramC; // значение коэф. c
+    /*КНОПКИ */
+    let buttons = document.querySelectorAll(".btn"); // коллекция кнопок
+    let btnCalc = document.getElementById("btn_calc"); // кнопка расчёта
+    let btnReset = document.getElementById("btn_reset"); // кнопка очистки
+    let btnPlay = document.getElementById("btn_play"); // кнопка музыки
+/****DOM-объекты (конец) ***/
 
-let rangeParamA = document.getElementById("range_a");
-let rangeParamB = document.getElementById("range_b");
-let rangeParamC = document.getElementById("range_c");
+/****Пользовательские переменные (начало) ***/
+    let indexChecked = getIndexChecked(bgSize); // позиция выбранного переключателя
 
-let buttons = document.querySelectorAll(".btn");
-let btnCalc = document.getElementById("btn_calc"); // кнопка расчёта
-let btnReset = document.getElementById("btn_reset"); // кнопка очистки
-let btnPlay = document.getElementById("btn_play"); // кнопка музыки
+    let paramA; // значение коэф. a
+    let paramB; // значение коэф. b
+    let paramC; // значение коэф. c
+    let player; // создаваемый в DOM объект плеер
 
-let player;
-let playerAttributes = {
-    "id": "player",
-    "src": "media/sample.mp3",
-    "controls": "",
-    "autoplay": "",
-    "class": "player"
-};
+    /*объект, содержащий свойства создаваемого плеера */
+    let playerAttributes = {
+        "id": "player",
+        "src": "media/sample.mp3",
+        "controls": "",
+        "autoplay": "",
+        "class": "player"
+    };
 
+    let result; // результат вычисления
+    let solution; // создаваемый в DOM объект (абзац) для вывода результата
+/****Пользовательские переменные (конец) ***/
 
-let result; // результат вычисления
-let solution; // объект для вывода результата
-
-// обработчик события "change" при изменении цвета фона
+/****ОБРАБОТЧИКИ СОБЫТИЙ(начало) ***/
+//обработчик события "change" при изменении цвета фона
 inputPageBgColor.addEventListener("input", () => {
-    document.body.style.backgroundColor = inputPageBgColor.value;
+    body.style.backgroundColor = inputPageBgColor.value;
 
     for(let title of titles) {
-        title.style.color = document.body.style.backgroundColor;
+        title.style.color = body.style.backgroundColor;
         title.style.filter = "invert(100%) hue-rotate(270deg)";
     }
 })
 
+// обработчик события "input" при загрузки фонового изображения
+inputPageImgLink.addEventListener("change", () => {
+    body.style.backgroundImage = `url("${inputPageImgLink.value}")`;
+
+    indexChecked = getIndexChecked(bgSize);
+    setBgPage(indexChecked);
+})
+
+//обработчик события "input" при выборе обычного масштаба
+bgSize[0].addEventListener("input", () => {
+    setBgPage(0);
+})
+
+//обработчик события "input" при выборе масштабирования фона
+bgSize[1].addEventListener("input", () => {
+    setBgPage(1);
+})
+
+//обработчик события "input" при выборе мозаичного фона
+bgSize[2].addEventListener("input", () => {
+    setBgPage(2);
+})
 
 // обработчик события "input" при вводе в поле коэф. а
 inputParamA.addEventListener("input", () => {
     paramA = setParam(inputParamA, rangeParamA);
     unBlocked(inputParamB, rangeParamB, buttons);
-})
-
-// обработчик события "input" при вводе в поле коэф. b
-inputParamB.addEventListener("input", () => {
-    paramB = setParam(inputParamB, rangeParamB);
-    unBlocked(inputParamC, rangeParamC);
-})
-
-// обработчик события "input" при вводе в поле коэф. c
-inputParamC.addEventListener("input", () => {
-    paramC = setParam(inputParamC, rangeParamC);
 })
 
 // обработчик события "change" при изменении ползунка коэф. а
@@ -71,31 +93,26 @@ rangeParamA.addEventListener("change", () => {
     unBlocked(inputParamB, rangeParamB, buttons);
 })
 
+// обработчик события "input" при вводе в поле коэф. b
+inputParamB.addEventListener("input", () => {
+    paramB = setParam(inputParamB, rangeParamB);
+    unBlocked(inputParamC, rangeParamC);
+})
+
 // обработчик события "change" при изменении ползунка коэф. b
 rangeParamB.addEventListener("change", () => {
     paramB = setParam(rangeParamB, inputParamB);
     unBlocked(inputParamC, rangeParamC);  
 })
 
+// обработчик события "input" при вводе в поле коэф. c
+inputParamC.addEventListener("input", () => {
+    paramC = setParam(inputParamC, rangeParamC);
+})
+
 // обработчик события "change" при изменении ползунка коэф. c
 rangeParamC.addEventListener("change", () => {
     paramC = setParam(rangeParamC, inputParamC);
-})
-
-// обработчик события "click" при клике по кнопке "Очистить"
-btnReset.addEventListener("click", () => {
-    for(let item of inputs) {
-        if(item.getAttribute("type") == "number" || item.getAttribute("type") == "range"){
-            item.value = "";
-        }
-        if(item.getAttribute("id") == "param_a" || item.getAttribute("id") == "range_a") {
-            continue;
-        }
-        else {
-            item.setAttribute("disabled", "disabled");
-        } 
-    }
-    document.body.removeChild(solution);
 })
 
 // обработчик события "click" при клике по кнопке "Произвести расчёт"
@@ -105,22 +122,84 @@ btnCalc.addEventListener("click", () => {
     
 })
 
+// обработчик события "click" при клике по кнопке "Очистить"
+btnReset.addEventListener("click", () => {
+    for(let item of inputs) {
+        if(item.getAttribute("type") == "number" || item.getAttribute("type") == "range"){
+            item.value = "";
+        }
+        if(item.getAttribute("id") == "param_a" || item.getAttribute("id") == "range_a" || item.getAttribute("id") == "btn_play") {
+            continue;
+        }
+        else {
+            item.setAttribute("disabled", "disabled");
+        } 
+    }
+    body.removeChild(solution);
+})
+
 //обработчик события "click" при клике по кнопке "Показать/Удалить плеер"
 btnPlay.addEventListener("click", () => {
     if(document.getElementById("player")) {
-        document.body.removeChild(player);
+        body.removeChild(player);
         btnPlay.setAttribute("value", "Показать плеер");
     }
     else {
         player = createPlayer("audio", playerAttributes);
 
-        document.body.append(player);
+        body.append(player);
         btnPlay.setAttribute("value", "Удалить плеер");
     }
 })
+/****ОБРАБОТЧИКИ СОБЫТИЙ(конец) ***/
+
+/****ФУНКЦИИ ***/
+//функция, возвращающая порядковый номер выбранного переключателя
+function getIndexChecked(bgSize) {
+    for (let i = 0; i < bgSize.length; i++) {
+        if (bgSize[i].checked) {
+            return i;
+        }
+    }
+}
+
+//функция, задающая изображения фона страницы
+function setBgPage(checked) {
+    body.style.backgroundImage = `url("${inputPageImgLink.value}")`;
+    switch(checked) {
+        case 0: body.style.backgroundRepeat = "no-repeat";
+                body.style.backgroundSize = "1920px";
+                break;
+        case 1: body.style.backgroundRepeat = "no-repeat";
+                body.style.backgroundSize = "cover";
+                break;
+        case 2: body.style.backgroundSize = "auto";
+                body.style.backgroundRepeat = "repeat";
+                break;
+    }
+}
+
+//функция разблокировки полей и кнопок 
+function unBlocked(input, range, buttons) {
+    input.removeAttribute("disabled");
+    range.removeAttribute("disabled");
+    
+    if(buttons) {
+        for (let btn of buttons) {
+            btn.removeAttribute("disabled");
+        }
+    }
+}
+
+// функция установки/обновления коэффициента в поле/ползунке
+function setParam (input1, input2) {
+    let param = +input1.value; //значение коэф.
+    input2.value = param; //значение поля/ползунка с коэф.
+
+    return param;
+}
 
 //функция создания аудио-плеера
-
 function createPlayer(tag, attr) {
     let player = document.createElement(tag);
 
@@ -130,30 +209,6 @@ function createPlayer(tag, attr) {
     player.classList.add("player-show");
     return player;
 }
-
-
-//функция разблокировки полей и кнопок 
-function unBlocked(input, range, buttons) {
-    input.removeAttribute("disabled");
-    range.removeAttribute("disabled");
-    if(buttons) {
-        for (let btn of buttons) {
-            btn.removeAttribute("disabled");
-        }
-    }
-}
-
-
-// функция
-
-function setParam (input1, input2) {
-    let param = +input1.value; //значение коэф.
-    input2.value = param; //значение поля/ползунка с коэф.
-
-    return param;
-}
-
-
 
 // главная функция расчёта корней (вычисление)
 function calcSolution(a, b, c){
@@ -222,7 +277,7 @@ function calcRoots (D, a, b, c){
     }
 }
 
-// функция вывода результата вы страницу (в объект p)
+// функция вывода результата вы страницу (в создаваемый объект solution - абзац)
 function printSolution() {
 
     if (document.querySelector(".solution")) {
@@ -231,7 +286,7 @@ function printSolution() {
     else {
         solution = createElem("p", checkResult(result));
         solution.innerHTML = checkResult(result);
-        document.body.append(solution);
+        body.append(solution);
     }
 }
 
@@ -245,7 +300,6 @@ function createElem(tag, content) {
 
     return elem;
 }
-
 
 // функция проверки результата вычисления
 function checkResult(result) {
@@ -261,9 +315,7 @@ function checkResult(result) {
     }
 }
 
-
-
-
+/****КОД при использовании alert и prompt ***/
 // let params = setParametrs();
 // let solution;
 
